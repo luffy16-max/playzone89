@@ -1,10 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Aviator</title>
+    <meta charset="UTF-8">
+    <title>Aviator - Playzone89</title>
+    <link rel="stylesheet" href="aviator.css">
 </head>
 <body>
-<h2>Aviator Game Coming Soon ✈️🔥</h2>
-<a href="../../index.html">⬅️ Back to Home</a>
+
+<div class="game-container">
+    <h1 class="avi-title">✈️ AVIATOR</h1>
+
+    <div id="game-area">
+        <img id="plane" src="https://i.imgur.com/5c6w1Sv.png">
+        <div id="multiplier">1.00x</div>
+    </div>
+
+    <div class="controls">
+        <button id="startBtn">Start</button>
+        <button id="cashOutBtn" disabled>Cash Out</button>
+    </div>
+
+    <div class="status">
+        <p id="statusText">Press Start ✈️</p>
+        <p id="scoreText">Score: 0</p>
+    </div>
+
+    <a class="back" href="../../index.html">⬅ Back</a>
+</div>
+
+<script src="aviator.js"></script>
 </body>
 </html>
