@@ -79,3 +79,15 @@ body {
     text-decoration: none;
     font-size: 18px;
 }
+#plane {
+    position: absolute;
+    left: -50px;
+    top: 120px;
+    width: 0;
+    height: 0;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-left: 40px solid red; /* plane color */
+    transform: translateX(0px);
+}
+
