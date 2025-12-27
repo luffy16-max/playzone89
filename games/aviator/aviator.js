@@ -1,3 +1,4 @@
+let historyBox = document.getElementById("historyBox");
 let multiplier = 1.00;
 let crashPoint = 0;
 let gameInterval;
@@ -51,6 +52,7 @@ function crash() {
     statusText.innerHTML = "CRASHED! 💥";
     scoreText.innerHTML = "Score: " + score;
     plane.style.transform = "rotate(90deg)";
+    historyBox.innerHTML += `<span style='color:${multiplier >= 2 ? "#00ff00" : "#ff007f"}'>${multiplier.toFixed(2)}x </span>`;
     stopGame();
 }
 
