@@ -1,14 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Playzone89</title>
-    <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<title>Crash Game Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  body {
+    margin: 0;
+    background: #0e0e0e;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  h1 {
+    margin-bottom: 10px;
+  }
+
+  #multiplier {
+    font-size: 64px;
+    font-weight: bold;
+    color: #00ffcc;
+  }
+
+  #status {
+    margin-top: 10px;
+    font-size: 14px;
+    opacity: 0.7;
+  }
+
+  #history {
+    margin-top: 20px;
+    width: 90%;
+    max-width: 400px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+  }
+
+  .round {
+    padding: 5px 8px;
+    border-radius: 4px;
+    background: #222;
+    font-size: 12px;
+  }
+
+  .high {
+    background: #1e7f43;
+  }
+
+  .veryhigh {
+    background: #8b0000;
+  }
+</style>
 </head>
 <body>
-    <h1 class="logo">PLAYZONE89</h1>
-    <p>Choose a game to start playing!</p>
 
-    <a class="button" href="games/aviator/aviator.html">✈️ Play Aviator</a>
+<h1>✈️ Crash Game Demo</h1>
+<div id="multiplier">1.00x</div>
+<div id="status">Waiting for next round...</div>
+
+<div id="history"></div>
+
+<script>
+/* ===============================
+   GLOBAL STATE
+================================ */
+let currentX = 1.00;
+let crashX = 2.00;
+let interval = null;
+
+/* 10x+ STREAK CONTROL */
+let highMode = false;
+let highModeEnd = 0;
+
+/* ===============================
+   RANDOM CRASH GENERATOR
+================================ */
+function normalCrash() {
+  const r = Math.random();
+
+  if (r < 0.60) return rand(1, 2);
+  if (r < 0.85) return rand(2, 5);
+  if (r < 0.95) return rand(5, 10);
+  if (r < 0.99) return rand(10, 100);
+  if (r < 0.999) return rand(100, 1000);
+  return rand(1000, 10000);
+}
+
+/* ===============================
+   RARE 10x+ FOR 5 MIN LOGIC
+================================ */
+function checkHighMode() {
+  if (!highMode && Math.random() < 0.01) { // 1% chance
+    highMode = true;
+    highModeEnd = Date.now() + 5 * 60 * 1000;
+    console.log("🔥 HIGH MODE STARTED");
+  }
+
+  if (highMode && Date.now() > highModeEnd) {
+    highMode = false;
+    console.log("❄️ HIGH MODE ENDED");
+  }
+}
+
+/* ===============================
+   GET CRASH MULTIPLIER
+================================ */
+function getCrashX() {
+  checkHighMode();
+
+  if (highMode) {
+    return rand(10, 50); // ALWAYS 10x+
+  }
+
+  return normalCrash();
+}
+
+/* ===============================
+   ROUND START
+================================ */
+function startRound() {
+  currentX = 1.00;
+  crashX = getCrashX();
+  document.getElementById("status").innerText = "Flying...";
+
+  interval = setInterval(() => {
+    currentX += 0.02 + currentX * 0.002;
+    updateUI();
+
+    if (currentX >= crashX) {
+      endRound();
+    }
+  }, 50);
+}
+
+/* ===============================
+   ROUND END
+================================ */
+function endRound() {
+  clearInterval(interval);
+  document.getElementById("status").innerText = "💥 Crashed at " + crashX.toFixed(2) + "x";
+  addHistory(crashX);
+
+  setTimeout(startRound, 3000);
+}
+
+/* ===============================
+   UI FUNCTIONS
+================================ */
+function updateUI() {
+  document.getElementById("multiplier").innerText =
+    currentX.toFixed(2) + "x";
+}
+
+function addHistory(x) {
+  const div = document.createElement("div");
+  div.className = "round";
+
+  if (x >= 10) div.classList.add("high");
+  if (x >= 1000) div.classList.add("veryhigh");
+
+  div.innerText = x.toFixed(2) + "x";
+  document.getElementById("history").prepend(div);
+
+  if (document.getElementById("history").children.length > 20) {
+    document.getElementById("history").lastChild.remove();
+  }
+}
+
+/* ===============================
+   UTILITY
+================================ */
+function rand(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+/* ===============================
+   START GAME
+================================ */
+setTimeout(startRound, 2000);
+</script>
+
 </body>
 </html>
